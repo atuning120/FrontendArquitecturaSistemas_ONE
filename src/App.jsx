@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Welcome from './pages/Welcome.jsx';
 import Login from './pages/login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import ClientPage from './pages/clientPage.jsx';
@@ -12,8 +13,11 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Ruta por defecto - redirige a login */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Ruta por defecto - muestra página de bienvenida */}
+          <Route path="/" element={<Welcome />} />
+          
+          {/* Página de bienvenida */}
+          <Route path="/welcome" element={<Welcome />} />
           
           {/* Ruta de login/register */}
           <Route path="/login" element={<Login />} />
@@ -30,7 +34,7 @@ function App() {
           <Route path="/test" element={<Test />} />
           
           {/* Ruta para páginas no encontradas */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
