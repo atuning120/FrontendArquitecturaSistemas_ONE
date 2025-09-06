@@ -13,6 +13,23 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const redirectByRole = (user) => {
+    switch (user.role) {
+      case 'cliente':
+        navigate('/client');
+        break;
+      case 'propietario':
+        navigate('/spot-owner');
+        break;
+      case 'organizador':
+        navigate('/event-owner');
+        break;
+      default:
+        navigate('/dashboard');
+        break;
+    }
+  };
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -40,8 +57,8 @@ const Login = () => {
       if (response.ok && data.success) {
         setMessage(data.message);
         localStorage.setItem('user', JSON.stringify(data.user));
-        // Redirigir al dashboard después del login
-        setTimeout(() => navigate('/dashboard'), 1000);
+        // Redirigir según el role del usuario
+        setTimeout(() => redirectByRole(data.user), 1000);
       } else {
         setMessage(data.message || 'Error al iniciar sesión');
       }
@@ -74,7 +91,7 @@ const Login = () => {
       if (response.ok && data.success) {
         setMessage(data.message);
         localStorage.setItem('user', JSON.stringify(data.user));
-        setTimeout(() => navigate('/dashboard'), 1000);
+        setTimeout(() => redirectByRole(data.user), 1000);
       } else {
         setMessage(data.message || 'Error al registrar usuario');
       }
