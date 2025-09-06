@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch(`${API_BACKEND}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BACKEND}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch(`${API_BACKEND}/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BACKEND}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
