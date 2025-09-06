@@ -7,7 +7,7 @@ const Login = () => {
     name: '',
     email: '',
     password: '',
-    accountType: 'client'
+    role: 'cliente'
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -65,7 +65,7 @@ const Login = () => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          accountType: formData.accountType
+          role: formData.role
         }),
       });
 
@@ -88,7 +88,7 @@ const Login = () => {
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setMessage('');
-    setFormData({ name: '', email: '', password: '', accountType: 'client' });
+    setFormData({ name: '', email: '', password: '', role: 'cliente' });
   };
 
   return (
@@ -128,7 +128,7 @@ const Login = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">Tres tipos de cuenta</h3>
-                  <p className="text-gray-600 text-sm">Cliente, Dueño de Local u Organizador de Eventos</p>
+                  <p className="text-gray-600 text-sm">Cliente, Propietario u Organizador de Eventos</p>
                 </div>
               </div>
 
@@ -241,15 +241,15 @@ const Login = () => {
                     </span>
                   </label>
                   <select
-                    name="accountType"
-                    value={formData.accountType}
+                    name="role"
+                    value={formData.role}
                     onChange={handleInputChange}
                     required={!isLogin}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
                   >
-                    <option value="client">Cliente - Buscar y reservar espacios</option>
-                    <option value="venue-owner">Dueño de Local - Ofrecer mi espacio</option>
-                    <option value="event-organizer">Organizador de Eventos - Crear eventos</option>
+                    <option value="cliente">Cliente - Buscar y reservar espacios</option>
+                    <option value="propietario">Propietario - Ofrecer mi espacio</option>
+                    <option value="organizador">Organizador - Crear eventos</option>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     Selecciona el tipo de cuenta según tu necesidad principal
