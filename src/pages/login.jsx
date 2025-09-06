@@ -12,8 +12,6 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const API_BASE_URL = 'http://localhost:8080';
-
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -25,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${API_BACKEND}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +55,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${API_BACKEND}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
