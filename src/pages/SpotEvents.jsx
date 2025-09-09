@@ -8,10 +8,20 @@ const SpotEvents = () => {
   const [selectedSpotId, setSelectedSpotId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const ownerId = 1; // Por ahora hardcodeado, después se obtendrá del usuario logueado
+  const [user, setUser] = useState(null);
 
   // Cargar locales del propietario al montar el componente
   useEffect(() => {
+    // Verificar usuario logueado
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+    } else {
+      navigate('/login');
+      return;
+    }
+    
     fetchOwnerSpots();
   }, []);
 
@@ -23,8 +33,14 @@ const SpotEvents = () => {
   }, [selectedSpotId]);
 
   const fetchOwnerSpots = async () => {
+    const currentUser = user || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
+    
+    if (!currentUser || !currentUser.id) {
+      setError('No se pudo obtener la información del usuario');
+      return;
+    }
     try {
-      const response = await fetch(`http://localhost:8080/spots/owner/${ownerId}`);
+      const response = await fetch(`http://localhost:8080/spots/owner/${currentUser.id}`);
       if (response.ok) {
         const spotsData = await response.json();
         setSpots(spotsData);

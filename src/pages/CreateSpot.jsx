@@ -1,15 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CreateSpot = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
-    ownerId: 1 // Por ahora hardcodeado, después se obtendrá del usuario logueado
+    ownerId: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    // Verificar usuario logueado
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+      setFormData(prev => ({
+        ...prev,
+        ownerId: userData.id
+      }));
+    } else {
+      navigate('/login');
+      return;
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

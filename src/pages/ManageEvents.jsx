@@ -8,17 +8,35 @@ const ManageEvents = () => {
   const [error, setError] = useState('');
   const [editingEvent, setEditingEvent] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const organizerId = 1; // Por ahora hardcodeado, después se obtendrá del usuario logueado
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Verificar usuario logueado
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+    } else {
+      navigate('/login');
+      return;
+    }
+    
     fetchOrganizerEvents();
   }, []);
 
   const fetchOrganizerEvents = async () => {
+    const currentUser = user || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
+    
+    if (!currentUser || !currentUser.id) {
+      setError('No se pudo obtener la información del usuario');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:8080/events/organizer/${organizerId}`);
+      const response = await fetch(`http://localhost:8080/events/organizer/${currentUser.id}`);
       if (response.ok) {
         const eventsData = await response.json();
         setEvents(eventsData);

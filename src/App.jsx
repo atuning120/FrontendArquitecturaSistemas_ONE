@@ -10,6 +10,8 @@ import CreateSpot from './pages/CreateSpot.jsx';
 import SpotEvents from './pages/SpotEvents.jsx';
 import CreateEvent from './pages/CreateEvent.jsx';
 import ManageEvents from './pages/ManageEvents.jsx';
+import AvailableEvents from './pages/AvailableEvents.jsx';
+import MyTickets from './pages/MyTickets.jsx';
 import Test from './pages/Test.jsx';
 
 function App() {
@@ -33,6 +35,10 @@ function App() {
           <Route path="/client" element={<ClientPage />} />
           <Route path="/event-owner" element={<EventOwner />} />
           <Route path="/spot-owner" element={<SpotOwnerPage />} />
+          
+          {/* Funcionalidades del cliente */}
+          <Route path="/available-events" element={<AvailableEvents />} />
+          <Route path="/my-tickets" element={<MyTickets />} />
           
           {/* Funcionalidades del propietario */}
           <Route path="/create-spot" element={<CreateSpot />} />

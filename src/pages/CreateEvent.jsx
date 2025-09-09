@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 const CreateEvent = () => {
   const navigate = useNavigate();
   const [spots, setSpots] = useState([]);
+  const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     eventName: '',
-    organizerId: 1, // Por ahora hardcodeado, después se obtendrá del usuario logueado
+    organizerId: '',
     spotId: '',
     eventDate: '',
     description: '',
@@ -36,6 +37,20 @@ const CreateEvent = () => {
 
   // Cargar locales disponibles al montar el componente
   useEffect(() => {
+    // Verificar usuario logueado
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+      setFormData(prev => ({
+        ...prev,
+        organizerId: userData.id
+      }));
+    } else {
+      navigate('/login');
+      return;
+    }
+    
     fetchSpots();
   }, []);
 
