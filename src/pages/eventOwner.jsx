@@ -61,7 +61,10 @@ const EventOwner = () => {
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-3">Crear Evento</h3>
             <p className="text-gray-600 mb-4">Organiza un nuevo evento increíble</p>
-            <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300">
+            <button 
+              onClick={() => navigate('/create-event')}
+              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
+            >
               Nuevo Evento
             </button>
           </div>
@@ -74,8 +77,11 @@ const EventOwner = () => {
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-3">Mis Eventos</h3>
             <p className="text-gray-600 mb-4">Gestiona todos tus eventos existentes</p>
-            <button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300">
-              Ver Eventos
+            <button 
+              onClick={() => navigate('/manage-events')}
+              className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
+            >
+              Gestionar Eventos
             </button>
           </div>
 

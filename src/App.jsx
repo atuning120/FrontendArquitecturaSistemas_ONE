@@ -6,6 +6,10 @@ import Dashboard from './pages/Dashboard.jsx';
 import ClientPage from './pages/clientPage.jsx';
 import EventOwner from './pages/eventOwner.jsx';
 import SpotOwnerPage from './pages/spotOwnerPage.jsx';
+import CreateSpot from './pages/CreateSpot.jsx';
+import SpotEvents from './pages/SpotEvents.jsx';
+import CreateEvent from './pages/CreateEvent.jsx';
+import ManageEvents from './pages/ManageEvents.jsx';
 import Test from './pages/Test.jsx';
 
 function App() {
@@ -29,6 +33,14 @@ function App() {
           <Route path="/client" element={<ClientPage />} />
           <Route path="/event-owner" element={<EventOwner />} />
           <Route path="/spot-owner" element={<SpotOwnerPage />} />
+          
+          {/* Funcionalidades del propietario */}
+          <Route path="/create-spot" element={<CreateSpot />} />
+          <Route path="/spot-events" element={<SpotEvents />} />
+          
+          {/* Funcionalidades del organizador */}
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/manage-events" element={<ManageEvents />} />
           
           {/* Página de pruebas de API */}
           <Route path="/test" element={<Test />} />
