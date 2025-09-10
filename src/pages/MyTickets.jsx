@@ -10,9 +10,6 @@ const MyTickets = () => {
   const [user, setUser] = useState(null);
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedTickets, setSelectedTickets] = useState([]);
-  const [qrValidationModal, setQrValidationModal] = useState(false);
-  const [scannedQR, setScannedQR] = useState('');
-  const [validationResult, setValidationResult] = useState(null);
 
   useEffect(() => {
     // Obtener usuario del localStorage
@@ -158,29 +155,6 @@ const MyTickets = () => {
     setShowQRModal(true);
   };
 
-  // Función para validar QR code
-  const validateQR = async (qrData) => {
-    try {
-      const response = await fetch('http://localhost:8080/tickets/validate-qr', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `qrData=${encodeURIComponent(qrData)}`
-      });
-
-      if (response.ok) {
-        const result = await response.text();
-        setValidationResult({ success: true, message: result });
-      } else {
-        const error = await response.text();
-        setValidationResult({ success: false, message: error });
-      }
-    } catch (err) {
-      setValidationResult({ success: false, message: 'Error de conexión al validar QR' });
-    }
-  };
-
   // Componente Modal para mostrar QR codes
   const QRModal = ({ tickets, onClose }) => {
     if (!tickets.length) return null;
@@ -260,92 +234,6 @@ const MyTickets = () => {
     );
   };
 
-  // Componente Modal para validar QR
-  const QRValidationModal = ({ onClose }) => {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl max-w-md w-full">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-800">Validar QR Code</h3>
-              <button
-                onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Pega el contenido del QR code:
-                </label>
-                <textarea
-                  value={scannedQR}
-                  onChange={(e) => setScannedQR(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg resize-none"
-                  rows="4"
-                  placeholder="TICKET_ID:1|EVENT:Nombre del Evento|USER:Nombre Usuario|DATE:2024-12-25T20:00:00|VALIDATION_CODE:VAL12345"
-                />
-              </div>
-              
-              <button
-                onClick={() => validateQR(scannedQR)}
-                disabled={!scannedQR.trim()}
-                className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg"
-              >
-                Validar QR
-              </button>
-              
-              {validationResult && (
-                <div className={`p-4 rounded-lg ${
-                  validationResult.success 
-                    ? 'bg-green-100 border border-green-400 text-green-700'
-                    : 'bg-red-100 border border-red-400 text-red-700'
-                }`}>
-                  <div className="flex items-center">
-                    {validationResult.success ? (
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                      </svg>
-                    )}
-                    <span className="font-medium">
-                      {validationResult.success ? 'QR Válido' : 'QR Inválido'}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm">{validationResult.message}</p>
-                </div>
-              )}
-            </div>
-            
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => {
-                  setScannedQR('');
-                  setValidationResult(null);
-                }}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg"
-              >
-                Limpiar
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         {/* Header */}
@@ -366,12 +254,6 @@ const MyTickets = () => {
                   className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
                 >
                   Comprar Más
-                </button>
-                <button
-                  onClick={() => setQrValidationModal(true)}
-                  className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
-                >
-                  Validar QR
                 </button>
                 <button
                   onClick={() => navigate('/client')}
@@ -594,16 +476,6 @@ const MyTickets = () => {
             onClose={() => {
               setShowQRModal(false);
               setSelectedTickets([]);
-            }} 
-          />
-        )}
-
-        {qrValidationModal && (
-          <QRValidationModal 
-            onClose={() => {
-              setQrValidationModal(false);
-              setScannedQR('');
-              setValidationResult(null);
             }} 
           />
         )}

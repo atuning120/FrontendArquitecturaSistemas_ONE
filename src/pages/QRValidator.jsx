@@ -61,12 +61,6 @@ const QRValidator = () => {
               >
                 Panel Organizador
               </button>
-              <button
-                onClick={() => navigate('/client')}
-                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
-              >
-                Área Cliente
-              </button>
             </div>
           </div>
         </div>
