@@ -12,6 +12,7 @@ import CreateEvent from './pages/CreateEvent.jsx';
 import ManageEvents from './pages/ManageEvents.jsx';
 import AvailableEvents from './pages/AvailableEvents.jsx';
 import MyTickets from './pages/MyTickets.jsx';
+import QRValidator from './pages/QRValidator.jsx';
 import Test from './pages/Test.jsx';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           {/* Funcionalidades del organizador */}
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/manage-events" element={<ManageEvents />} />
+          <Route path="/qr-validator" element={<QRValidator />} />
           
           {/* Página de pruebas de API */}
           <Route path="/test" element={<Test />} />
