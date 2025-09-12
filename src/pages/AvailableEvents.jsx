@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MercadoPagoPayment from '../components/payment/MercadoPagoPayment';
 
 const AvailableEvents = () => {
   const navigate = useNavigate();
@@ -93,8 +94,9 @@ const AvailableEvents = () => {
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(false);
     const [purchaseError, setPurchaseError] = useState('');
+    const [showPayment, setShowPayment] = useState(false);
 
-    const handlePurchase = async (e) => {
+    const handleProceedToPayment = (e) => {
       e.preventDefault();
       
       // Verificar que hay usuario logueado
@@ -105,44 +107,32 @@ const AvailableEvents = () => {
         return;
       }
 
-      setLoading(true);
+      setShowPayment(true);
+    };
+
+    const handlePaymentSuccess = () => {
+      onPurchase();
+      onClose();
+      alert(`¡Compra exitosa! Has comprado ${quantity} ticket(s) para ${event.eventName}`);
+    };
+
+    const handlePaymentError = (error) => {
+      console.error('Error en el pago:', error);
+      setPurchaseError('Error en el proceso de pago. Por favor, intenta nuevamente.');
+      setShowPayment(false);
+    };
+
+    const handleBackToForm = () => {
+      setShowPayment(false);
       setPurchaseError('');
-
-      try {
-        const purchaseData = {
-          eventId: event.id,
-          userId: currentUser.id, // Usar el ID del usuario logueado
-          quantity: parseInt(quantity)
-        };
-
-        const response = await fetch('http://localhost:8080/tickets/purchase', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(purchaseData)
-        });
-
-        if (response.ok) {
-          onPurchase();
-          onClose();
-          // Mostrar mensaje de éxito
-          alert(`¡Compra exitosa! Has comprado ${quantity} ticket(s) para ${event.eventName}`);
-        } else {
-          const errorData = await response.text();
-          setPurchaseError('Error en la compra: ' + errorData);
-        }
-      } catch (err) {
-        setPurchaseError('Error de conexión: ' + err.message);
-      } finally {
-        setLoading(false);
-      }
     };
 
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">Comprar Tickets</h3>
+        <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            {showPayment ? 'Pagar con MercadoPago' : 'Comprar Tickets'}
+          </h3>
           
           <div className="mb-4">
             <h4 className="text-lg font-semibold text-gray-700">{event.eventName}</h4>
@@ -156,56 +146,69 @@ const AvailableEvents = () => {
             </div>
           )}
 
-          <form onSubmit={handlePurchase} className="space-y-4">
-            <div>
-              <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
-                Cantidad de tickets
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                min="1"
-                max={event.capacity || 100}
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
-                required
-              />
-            </div>
-
-            <div className="bg-blue-50 rounded-lg p-3">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Total:</span>
-                <span className="text-lg font-bold text-green-600">
-                  {formatPrice(event.ticketPrice * quantity)}
-                </span>
+          {!showPayment ? (
+            <form onSubmit={handleProceedToPayment} className="space-y-4">
+              <div>
+                <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
+                  Cantidad de tickets
+                </label>
+                <input
+                  type="number"
+                  id="quantity"
+                  min="1"
+                  max={event.capacity || 100}
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  required
+                />
               </div>
-            </div>
 
-            <div className="flex gap-3 pt-4">
+              <div className="bg-blue-50 rounded-lg p-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Total:</span>
+                  <span className="text-lg font-bold text-green-600">
+                    {formatPrice(event.ticketPrice * quantity)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 disabled:opacity-50"
+                >
+                  Proceder al Pago
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="space-y-4">
+              <MercadoPagoPayment
+                event={event}
+                user={user || JSON.parse(localStorage.getItem('user'))}
+                quantity={parseInt(quantity)}
+                onSuccess={handlePaymentSuccess}
+                onError={handlePaymentError}
+                onCancel={handleBackToForm}
+              />
+              
               <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
+                onClick={handleBackToForm}
+                className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
               >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 disabled:opacity-50"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Comprando...
-                  </div>
-                ) : (
-                  'Comprar'
-                )}
+                ← Volver a modificar cantidad
               </button>
             </div>
-          </form>
+          )}
         </div>
       </div>
     );
