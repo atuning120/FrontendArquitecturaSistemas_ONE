@@ -7,6 +7,19 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## Credenciales para realizar pago con la simulacion de pago de mercado pago
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Loguearse con la siguiente cuenta de mercado pago (cuenta comprador)
+
+1. **Usuario**: `TESTUSER799961765450508313`
+2. **Contraseña**: `mHPhsfxvee`
+
+
+### Realizar compras (Tarjeta Visa)
+
+1. **Numero de Tarjeta**: `4168 8188 4444 7115`
+2. **Nombre**: `APRO`
+3. **CVV**: `123`
+4. **Fecha**: `11/30`
+5. **Identidad (otro)**: `123456789`
+

@@ -33,8 +33,6 @@ const MercadoPagoPayment = ({ event, user, quantity, onSuccess, onError, onCance
           body: JSON.stringify(requestBody)
         });
 
-        console.log('Respuesta del backend:', response.status, response.statusText);
-
         if (!response.ok) {
           throw new Error('Error al crear la preferencia de pago');
         }
@@ -44,12 +42,10 @@ const MercadoPagoPayment = ({ event, user, quantity, onSuccess, onError, onCance
         
         if (contentType && contentType.includes('application/json')) {
           data = await response.json();
-          console.log('Respuesta JSON del backend:', data);
           setPreferenceId(data.id || data);
         } else {
           // Si la respuesta es texto plano (como en el backend actual)
           data = await response.text();
-          console.log('Respuesta de texto del backend:', data);
           
           // Verificar si la respuesta es un ID válido o un mensaje de error
           if (data.startsWith('Error:') || data.includes('Error')) {
@@ -78,7 +74,12 @@ const MercadoPagoPayment = ({ event, user, quantity, onSuccess, onError, onCance
       const publicKey = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY;
       
       if (!publicKey || publicKey === 'TEST-your-public-key-here') {
-        setError('Error: VITE_MERCADOPAGO_PUBLIC_KEY no está configurado correctamente en el archivo .env');
+        setError('❌ CREDENCIALES FALTANTES: Necesitas configurar VITE_MERCADOPAGO_PUBLIC_KEY en el archivo .env del frontend.');
+        return;
+      }
+      
+      if (!publicKey.startsWith('TEST-') && !publicKey.startsWith('APP_USR-')) {
+        setError('❌ FORMATO INCORRECTO: La Public Key debe empezar con TEST- o APP_USR-');
         return;
       }
       
@@ -190,11 +191,8 @@ const MercadoPagoPayment = ({ event, user, quantity, onSuccess, onError, onCance
               customization={{
                 texts: {
                   valueProp: 'smart_option'
-                },
-                visual: {
-                  buttonBackground: 'default',
-                  borderRadius: '8px'
                 }
+                // Removido buttonBackground deprecated
               }}
               onSubmit={onSuccess}
               onError={onError}
