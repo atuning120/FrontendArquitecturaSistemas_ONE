@@ -36,7 +36,7 @@ const ManageEvents = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:8080/events/organizer/${currentUser.id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BACKEND}/events/organizer/${currentUser.id}`);
       if (response.ok) {
         const eventsData = await response.json();
         setEvents(eventsData);
@@ -52,7 +52,7 @@ const ManageEvents = () => {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      const response = await fetch(`http://localhost:8080/events/${eventId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BACKEND}/events/${eventId}`, {
         method: 'DELETE'
       });
 

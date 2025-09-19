@@ -13,6 +13,7 @@ import ManageEvents from './pages/ManageEvents.jsx';
 import AvailableEvents from './pages/AvailableEvents.jsx';
 import MyTickets from './pages/MyTickets.jsx';
 import Test from './pages/Test.jsx';
+import TestNotifications from './pages/TestNotifications.jsx';
 
 function App() {
   return (
@@ -50,6 +51,9 @@ function App() {
           
           {/* Página de pruebas de API */}
           <Route path="/test" element={<Test />} />
+          
+          {/* Página de pruebas de notificaciones */}
+          <Route path="/test-notifications" element={<TestNotifications />} />
           
           {/* Ruta para páginas no encontradas */}
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -7,6 +7,12 @@
     <title>FacTickets</title>
   </head>
   <body>
+    <script>
+      // Polyfill para SockJS y otras librerías que esperan 'global'
+      if (typeof global === 'undefined') {
+        var global = globalThis;
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
