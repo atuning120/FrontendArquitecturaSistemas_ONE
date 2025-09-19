@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ClientPage = () => {
   const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef(null);
+
+  // Cerrar dropdown cuando se hace click fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
@@ -19,6 +35,32 @@ const ClientPage = () => {
               <p className="hidden sm:block text-gray-600">Panel del Cliente</p>
             </div>
             <div className="flex items-center space-x-4">
+              {/* Icono de notificaciones */}
+              <div className="relative" ref={notificationRef}>
+                <button
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="relative p-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                >
+                  <svg 
+                    className="w-6 h-6" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                    />
+                  </svg>
+                  {/* Indicador de notificaciones nuevas */}
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    3
+                  </span>
+                </button>
+              </div>
+              
               <button
                 onClick={() => navigate('/dashboard')}
                 className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
@@ -35,6 +77,69 @@ const ClientPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Dropdown de notificaciones */}
+      {showNotifications && (
+        <div className="absolute top-20 right-4 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800">Notificaciones</h3>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {/* Notificación 1 */}
+            <div className="p-4 hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-800">
+                    Nuevo evento disponible
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    "Concierto de Jazz en el Centro" ya está disponible para reservas
+                  </p>
+                  <p className="text-xs text-gray-400 mt-2">Hace 2 horas</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Notificación 2 */}
+            <div className="p-4 hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-800">
+                    Ticket confirmado
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Tu ticket para "Festival de Verano" ha sido confirmado
+                  </p>
+                  <p className="text-xs text-gray-400 mt-2">Hace 1 día</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Notificación 3 */}
+            <div className="p-4 hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-800">
+                    Recordatorio de evento
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Tu evento "Workshop de Fotografía" comienza en 2 días
+                  </p>
+                  <p className="text-xs text-gray-400 mt-2">Hace 2 días</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 border-t border-gray-200">
+            <button className="w-full text-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+              Ver todas las notificaciones
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Contenido principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
