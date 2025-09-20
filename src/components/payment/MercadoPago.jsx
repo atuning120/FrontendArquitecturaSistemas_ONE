@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { buildApiUrl } from '../../config/api';
 
 const MercadoPago = () => {
   const [preferenceId, setPreferenceId] = useState(null);
@@ -7,7 +8,7 @@ const MercadoPago = () => {
   useEffect(() => {
     const fetchPreferenceId = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/mercadopago/create-preference', {
+        const response = await fetch(buildApiUrl('/api/mercadopago/create-preference'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

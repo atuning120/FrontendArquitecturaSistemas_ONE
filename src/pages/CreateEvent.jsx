@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../config/api';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const CreateEvent = () => {
 
   const fetchSpots = async () => {
     try {
-      const response = await fetch('http://localhost:8080/spots');
+      const response = await fetch(buildApiUrl('/spots'));
       if (response.ok) {
         const spotsData = await response.json();
         setSpots(spotsData);
@@ -90,7 +91,7 @@ const CreateEvent = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/events', {
+      const response = await fetch(buildApiUrl('/events'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

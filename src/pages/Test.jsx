@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_CONFIG } from '../config/api';
 
 const Test = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +14,7 @@ const Test = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const API_BASE_URL = 'http://localhost:8080';
+  const API_BASE_URL = API_CONFIG.BASE_URL;
 
   // Cargar todos los usuarios al iniciar
   useEffect(() => {

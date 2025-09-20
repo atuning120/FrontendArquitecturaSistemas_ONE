@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MercadoPagoPayment from '../components/payment/MercadoPagoPayment';
+import { buildApiUrl } from '../config/api';
 
 const AvailableEvents = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const AvailableEvents = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:8080/events');
+      const response = await fetch(buildApiUrl('/events'));
       if (response.ok) {
         const eventsData = await response.json();
         setEvents(eventsData);

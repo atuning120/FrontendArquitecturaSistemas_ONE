@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../config/api';
 
 const ManageEvents = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const ManageEvents = () => {
 
   const handleEditEvent = async (eventData) => {
     try {
-      const response = await fetch(`http://localhost:8080/events/${eventData.id}`, {
+      const response = await fetch(buildApiUrl(`/events/${eventData.id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

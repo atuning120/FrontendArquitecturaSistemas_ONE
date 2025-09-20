@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { buildApiUrl } from '../../config/api';
 
 const MercadoPagoPayment = ({ event, user, quantity, onSuccess, onError, onCancel }) => {
   const [preferenceId, setPreferenceId] = useState(null);
@@ -25,7 +26,7 @@ const MercadoPagoPayment = ({ event, user, quantity, onSuccess, onError, onCance
 
         console.log('Enviando datos al backend:', requestBody);
         
-        const response = await fetch('http://localhost:8080/api/mercadopago/create-preference', {
+        const response = await fetch(buildApiUrl('/api/mercadopago/create-preference'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

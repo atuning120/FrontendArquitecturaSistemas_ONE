@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../config/api';
 
 const CreateSpot = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const CreateSpot = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8080/spots', {
+      const response = await fetch(buildApiUrl('/spots'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

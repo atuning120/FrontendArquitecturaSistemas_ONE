@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../config/api';
 
 const SpotEvents = () => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const SpotEvents = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/spots/owner/${currentUser.id}`);
+      const response = await fetch(buildApiUrl(`/spots/owner/${currentUser.id}`));
       if (response.ok) {
         const spotsData = await response.json();
         setSpots(spotsData);
@@ -60,7 +61,7 @@ const SpotEvents = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:8080/events/spot/${spotId}`);
+      const response = await fetch(buildApiUrl(`/events/spot/${spotId}`));
       if (response.ok) {
         const eventsData = await response.json();
         setEvents(eventsData);

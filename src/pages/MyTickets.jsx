@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../config/api';
 
 const MyTickets = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const MyTickets = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:8080/tickets/user/${currentUser.id}`);
+      const response = await fetch(buildApiUrl(`/tickets/user/${currentUser.id}`));
       
       if (response.ok) {
         const ticketsData = await response.json();
@@ -48,7 +49,7 @@ const MyTickets = () => {
         
         for (const eventId of eventIds) {
           try {
-            const eventResponse = await fetch(`http://localhost:8080/events/${eventId}`);
+            const eventResponse = await fetch(buildApiUrl(`/events/${eventId}`));
             if (eventResponse.ok) {
               const eventData = await eventResponse.json();
               eventDetails[eventId] = eventData;
