@@ -114,7 +114,6 @@ const AvailableEvents = () => {
     const handlePaymentSuccess = () => {
       onPurchase();
       onClose();
-      alert(`¡Compra exitosa! Has comprado ${quantity} ticket(s) para ${event.eventName}`);
     };
 
     const handlePaymentError = (error) => {
