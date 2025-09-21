@@ -13,6 +13,8 @@ import ManageEvents from './pages/ManageEvents.jsx';
 import AvailableEvents from './pages/AvailableEvents.jsx';
 import MyTickets from './pages/MyTickets.jsx';
 import PaymentConfirmation from './pages/PaymentConfirmation.jsx';
+import PaymentSuccess from './pages/PaymentSuccess.jsx';
+import PaymentFailed from './pages/PaymentFailed.jsx';
 import Test from './pages/Test.jsx';
 import TestNotifications from './pages/TestNotifications.jsx';
 
@@ -44,6 +46,10 @@ function App() {
           
           {/* Página de confirmación de pago de MercadoPago */}
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+          
+          {/* Páginas de resultado de pago */}
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
           
           {/* Funcionalidades del propietario */}
           <Route path="/create-spot" element={<CreateSpot />} />
