@@ -15,6 +15,7 @@ import MyTickets from './pages/MyTickets.jsx';
 import PaymentConfirmation from './pages/PaymentConfirmation.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import PaymentFailed from './pages/PaymentFailed.jsx';
+import QRValidator from './pages/QRValidator.jsx';
 import Test from './pages/Test.jsx';
 import TestNotifications from './pages/TestNotifications.jsx';
 
@@ -58,6 +59,7 @@ function App() {
           {/* Funcionalidades del organizador */}
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/manage-events" element={<ManageEvents />} />
+          <Route path="/qr-validator" element={<QRValidator />} />
           
           {/* Página de pruebas de API */}
           <Route path="/test" element={<Test />} />

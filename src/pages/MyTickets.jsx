@@ -9,6 +9,8 @@ const MyTickets = () => {
   const [error, setError] = useState('');
   const [events, setEvents] = useState({});
   const [user, setUser] = useState(null);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [selectedTickets, setSelectedTickets] = useState([]);
 
   useEffect(() => {
     // Obtener usuario del localStorage
@@ -148,8 +150,93 @@ const MyTickets = () => {
 
   const groupedTickets = groupTicketsByEvent(tickets);
 
+  // Función para mostrar QR codes de un evento
+  const showQRCodes = (eventTickets) => {
+    setSelectedTickets(eventTickets);
+    setShowQRModal(true);
+  };
+
+  // Componente Modal para mostrar QR codes
+  const QRModal = ({ tickets, onClose }) => {
+    if (!tickets.length) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800">Códigos QR de tus Tickets</h3>
+              <button
+                onClick={onClose}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {tickets.map((ticket, index) => (
+                <div key={ticket.id || index} className="border border-gray-200 rounded-lg p-4 text-center">
+                  <h4 className="font-semibold text-gray-800 mb-2">
+                    Ticket #{ticket.id || index + 1}
+                  </h4>
+                  <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                    {ticket.qrCode ? (
+                      <img
+                        src={ticket.qrCode}
+                        alt={`QR Code para ticket ${ticket.id}`}
+                        className="mx-auto max-w-full h-auto"
+                        style={{ maxWidth: '200px' }}
+                      />
+                    ) : (
+                      <div className="w-48 h-48 mx-auto bg-gray-200 rounded-lg flex items-center justify-center">
+                        <span className="text-gray-500">QR no disponible</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Precio: {formatPrice(ticket.price)}
+                  </p>
+                  <button
+                    onClick={() => {
+                      const printWindow = window.open('', '_blank');
+                      printWindow.document.write(`
+                        <html>
+                          <head><title>Ticket QR - ${ticket.id}</title></head>
+                          <body style="text-align: center; font-family: Arial;">
+                            <h2>Ticket #${ticket.id}</h2>
+                            <img src="${ticket.qrCode}" style="max-width: 300px;" />
+                            <p>Precio: ${formatPrice(ticket.price)}</p>
+                          </body>
+                        </html>
+                      `);
+                      printWindow.document.close();
+                      printWindow.print();
+                    }}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                  >
+                    Imprimir QR
+                  </button>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6 text-center">
+              <button
+                onClick={onClose}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         {/* Header */}
         <div className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -337,18 +424,25 @@ const MyTickets = () => {
                             </div>
 
                             {/* Acciones */}
-                            {eventStatus.status === 'upcoming' && (
-                              <div className="mt-4 pt-4 border-t border-gray-200">
-                                <div className="flex gap-2">
-                                  <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 text-sm">
-                                    Ver QR Codes
-                                  </button>
-                                  <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 text-sm">
-                                    Descargar PDF
-                                  </button>
-                                </div>
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                              <div className="flex gap-2">
+                                <button 
+                                  onClick={() => showQRCodes(group.tickets)}
+                                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 text-sm flex items-center justify-center"
+                                >
+                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M12 12h-4.01M16 12h4m-4 0v4m-4-4v4m-4-4v4"></path>
+                                  </svg>
+                                  Ver QR Codes
+                                </button>
+                                <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 text-sm flex items-center justify-center">
+                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                  </svg>
+                                  Descargar PDF
+                                </button>
                               </div>
-                            )}
+                            </div>
                           </div>
                         );
                       } catch (e) {
@@ -375,8 +469,19 @@ const MyTickets = () => {
             )}
           </div>
         </div>
+
+        {/* Modales */}
+        {showQRModal && (
+          <QRModal 
+            tickets={selectedTickets} 
+            onClose={() => {
+              setShowQRModal(false);
+              setSelectedTickets([]);
+            }} 
+          />
+        )}
       </div>
-    );
+  );
 };
 
 export default MyTickets;
