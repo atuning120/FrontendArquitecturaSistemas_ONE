@@ -208,7 +208,7 @@ const QRValidator = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/tickets/validate-qr', {
+      const response = await fetch('${import.meta.env.VITE_API_BACKEND}/tickets/validate-qr', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
