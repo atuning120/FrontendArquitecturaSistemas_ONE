@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNotifications } from '../hooks/useNotifications';
+import { useNotifications } from '../../hooks/useNotifications';
 
 const TestNotifications = () => {
   const { notifications, unreadCount, connected } = useNotifications();

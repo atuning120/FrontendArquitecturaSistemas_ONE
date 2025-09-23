@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MercadoPagoPayment from '../components/payment/MercadoPagoPayment';
-import { buildApiUrl } from '../config/api';
+import MercadoPagoPayment from '../../components/payment/MercadoPagoPayment';
+import { buildApiUrl } from '../../config/api';
 
 const AvailableEvents = () => {
   const navigate = useNavigate();

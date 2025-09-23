@@ -22,6 +22,7 @@ export const API_CONFIG = {
     PURCHASE_TICKETS: '/tickets/purchase',
     TICKETS_BY_USER: (userId) => `/tickets/user/${userId}`,
     TICKETS_BY_EVENT: (eventId) => `/tickets/event/${eventId}`,
+    VALIDATE_QR: '/tickets/validate-qr',
   }
 };
 

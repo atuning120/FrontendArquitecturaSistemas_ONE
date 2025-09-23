@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { buildApiUrl } from '../config/api';
+import { buildApiUrl } from '../../config/api';
 
 const ManageEvents = () => {
   const navigate = useNavigate();

@@ -1,23 +1,28 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Welcome from './pages/Welcome.jsx';
-import Login from './pages/login.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import ClientPage from './pages/clientPage.jsx';
-import EventOwner from './pages/eventOwner.jsx';
-import SpotOwnerPage from './pages/spotOwnerPage.jsx';
-import CreateSpot from './pages/CreateSpot.jsx';
-import SpotEvents from './pages/SpotEvents.jsx';
-import CreateEvent from './pages/CreateEvent.jsx';
-import ManageEvents from './pages/ManageEvents.jsx';
-import AvailableEvents from './pages/AvailableEvents.jsx';
-import MyTickets from './pages/MyTickets.jsx';
-import PaymentConfirmation from './pages/PaymentConfirmation.jsx';
-import PaymentSuccess from './pages/PaymentSuccess.jsx';
-import PaymentFailed from './pages/PaymentFailed.jsx';
-import QRValidator from './pages/QRValidator.jsx';
-import Test from './pages/Test.jsx';
-import TestNotifications from './pages/TestNotifications.jsx';
+// Auth pages
+import Welcome from './pages/auth/Welcome.jsx';
+import Login from './pages/auth/login.jsx';
+// Shared pages
+import Dashboard from './pages/shared/Dashboard.jsx';
+import Test from './pages/shared/Test.jsx';
+import TestNotifications from './pages/shared/TestNotifications.jsx';
+// Client pages
+import ClientPage from './pages/client/ClientPage.jsx';
+import AvailableEvents from './pages/client/AvailableEvents.jsx';
+import MyTickets from './pages/client/MyTickets.jsx';
+import PaymentConfirmation from './pages/client/PaymentConfirmation.jsx';
+import PaymentSuccess from './pages/client/PaymentSuccess.jsx';
+import PaymentFailed from './pages/client/PaymentFailed.jsx';
+// Organizer pages
+import EventOwner from './pages/organizer/eventOwner.jsx';
+import CreateEvent from './pages/organizer/CreateEvent.jsx';
+import ManageEvents from './pages/organizer/ManageEvents.jsx';
+import QRValidator from './pages/organizer/QRValidator.jsx';
+// Owner pages
+import SpotOwnerPage from './pages/owner/spotOwnerPage.jsx';
+import CreateSpot from './pages/owner/CreateSpot.jsx';
+import SpotEvents from './pages/owner/SpotEvents.jsx';
 
 function App() {
   return (
