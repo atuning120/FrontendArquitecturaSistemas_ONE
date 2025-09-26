@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import webSocketService from '../services/webSocketService';
 import nativeWebSocketService from '../services/nativeWebSocketService';
+import fetchNotifications from '../services/notificationApiService';
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -9,13 +10,17 @@ export const useNotifications = () => {
   const [service, setService] = useState(null);
 
   // Función para actualizar las notificaciones
-  const updateNotifications = useCallback(() => {
-    if (service) {
-      const currentNotifications = service.getNotifications();
-      setNotifications(currentNotifications);
-      setUnreadCount(service.getUnreadCount());
+  const updateNotifications = useCallback(async () => {
+    try {
+      const storagedNotifications = await fetchNotifications();
+      setNotifications(storagedNotifications);
+      const count = storagedNotifications.filter(n => !n.read).length;
+      setUnreadCount(count);
+    } catch (error) {
+      console.error('Error al obtener notificaciones:', error);
+      setNotifications([]);
     }
-  }, [service]);
+  }, []);
 
   // Función que se ejecuta cuando llega una nueva notificación
   const handleNewNotification = useCallback((notification) => {
@@ -38,11 +43,11 @@ export const useNotifications = () => {
       try {
         console.log('Intentando conexión WebSocket...');
         // Intentar conectar con SockJS
+        updateNotifications();
         await webSocketService.connect();
         if (isMounted) {
           setService(webSocketService);
           setConnected(true);
-          updateNotifications();
           console.log('✅ Conectado usando SockJS');
         }
       } catch (error) {
@@ -76,7 +81,7 @@ export const useNotifications = () => {
     return () => {
       isMounted = false;
     };
-  }, []); // Solo ejecutar una vez
+  }, [updateNotifications]); // Solo ejecutar una vez
 
   // Efecto separado para manejar el listener cuando cambia el servicio
   useEffect(() => {
