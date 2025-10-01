@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import webSocketService from '../services/webSocketService';
 import nativeWebSocketService from '../services/nativeWebSocketService';
-import fetchNotifications from '../services/notificationApiService';
+import notificationApiService from '../services/notificationApiService';
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -9,26 +9,24 @@ export const useNotifications = () => {
   const [connected, setConnected] = useState(false);
   const [service, setService] = useState(null);
 
-  // Función para actualizar las notificaciones
   const updateNotifications = useCallback(async () => {
     try {
-      const storagedNotifications = await fetchNotifications();
+      const storagedNotifications = await notificationApiService.fetchNotifications();
       setNotifications(storagedNotifications);
       const count = storagedNotifications.filter(n => !n.read).length;
       setUnreadCount(count);
     } catch (error) {
       console.error('Error al obtener notificaciones:', error);
       setNotifications([]);
+      setUnreadCount(0);
     }
   }, []);
 
-  // Función que se ejecuta cuando llega una nueva notificación
   const handleNewNotification = useCallback((notification) => {
     updateNotifications();
     
-    // Mostrar notificación del navegador si está permitido
     if (Notification.permission === 'granted') {
-      new Notification(notification.title, {
+      new Notification(notification.title || 'Nueva Notificación', {
         body: notification.message,
         icon: '/favicon.ico'
       });
@@ -38,31 +36,25 @@ export const useNotifications = () => {
   useEffect(() => {
     let isMounted = true;
     
-    // Intentar usar SockJS primero, si falla usar WebSocket nativo
-    const connectWebSocket = async () => {
+    const connectAndFetch = async () => {
+      // 1. Obtener datos iniciales de la BD
+      await updateNotifications();
+
+      // 2. Intentar conexión WebSocket
       try {
-        console.log('Intentando conexión WebSocket...');
-        // Intentar conectar con SockJS
-        updateNotifications();
         await webSocketService.connect();
         if (isMounted) {
           setService(webSocketService);
           setConnected(true);
-          console.log('✅ Conectado usando SockJS');
         }
       } catch (error) {
-        console.warn('⚠️ SockJS falló, intentando WebSocket nativo:', error);
         try {
-          // Si SockJS falla, usar WebSocket nativo
           await nativeWebSocketService.connect();
           if (isMounted) {
             setService(nativeWebSocketService);
             setConnected(true);
-            updateNotifications();
-            console.log('✅ Conectado usando WebSocket nativo');
           }
         } catch (nativeError) {
-          console.error('❌ Ambos métodos de conexión fallaron:', nativeError);
           if (isMounted) {
             setConnected(false);
           }
@@ -70,20 +62,17 @@ export const useNotifications = () => {
       }
     };
 
-    connectWebSocket();
+    connectAndFetch();
 
-    // Pedir permisos para notificaciones del navegador
     if (Notification.permission === 'default') {
       Notification.requestPermission();
     }
 
-    // Cleanup
     return () => {
       isMounted = false;
     };
-  }, [updateNotifications]); // Solo ejecutar una vez
+  }, [updateNotifications]);
 
-  // Efecto separado para manejar el listener cuando cambia el servicio
   useEffect(() => {
     if (service) {
       const removeListener = service.addListener(handleNewNotification);
@@ -91,29 +80,20 @@ export const useNotifications = () => {
     }
   }, [service, handleNewNotification]);
 
-  // Función para marcar como leída
-  const markAsRead = useCallback((notificationId) => {
-    if (service) {
-      service.markAsRead(notificationId);
-      updateNotifications();
-    }
-  }, [service, updateNotifications]);
+  const markAsRead = useCallback(async (notificationId) => {
+    await notificationApiService.markAsRead(notificationId);
+    await updateNotifications();
+  }, [updateNotifications]);
 
-  // Función para marcar todas como leídas
-  const markAllAsRead = useCallback(() => {
-    if (service) {
-      service.markAllAsRead();
-      updateNotifications();
-    }
-  }, [service, updateNotifications]);
+  const markAllAsRead = useCallback(async () => {
+    await notificationApiService.markAllAsRead();
+    await updateNotifications();
+  }, [updateNotifications]);
 
-  // Función para limpiar todas las notificaciones
-  const clearNotifications = useCallback(() => {
-    if (service) {
-      service.clearNotifications();
-      updateNotifications();
-    }
-  }, [service, updateNotifications]);
+  const clearNotifications = useCallback(async () => {
+    await notificationApiService.clearNotifications();
+    await updateNotifications();
+  }, [updateNotifications]);
 
   return {
     notifications,
