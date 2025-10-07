@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Welcome from './pages/auth/Welcome.jsx';
 import Login from './pages/auth/login.jsx';
 // Shared pages
-import Dashboard from './pages/shared/Dashboard.jsx';
 import Test from './pages/shared/Test.jsx';
 import TestNotifications from './pages/shared/TestNotifications.jsx';
 // Client pages
@@ -37,9 +36,6 @@ function App() {
           
           {/* Ruta de login/register */}
           <Route path="/login" element={<Login />} />
-          
-          {/* Dashboard principal después del login */}
-          <Route path="/dashboard" element={<Dashboard />} />
           
           {/* Páginas específicas por tipo de usuario */}
           <Route path="/client" element={<ClientPage />} />

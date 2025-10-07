@@ -25,7 +25,7 @@ const Login = () => {
         navigate('/event-owner');
         break;
       default:
-        navigate('/dashboard');
+        navigate('/client');
         break;
     }
   };

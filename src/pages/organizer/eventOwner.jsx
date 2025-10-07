@@ -20,12 +20,6 @@ const EventOwner = () => {
             </div>
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => navigate('/dashboard')}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
-              >
-                Dashboard
-              </button>
-              <button
                 onClick={() => navigate('/login')}
                 className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
               >
